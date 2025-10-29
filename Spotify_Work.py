@@ -1,25 +1,11 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
-#Cleaned dataset
-url="https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv"
-df = pd.read_csv(url)
-
-df["track_album_release_date"] = pd.to_datetime(df["track_album_release_date"], errors="coerce")
-df["release_year"] = df["track_album_release_date"].dt.year.astype("Int64")
-
-df = df.drop(columns=["track_id","track_album_id","playlist_id","track_album_release_date"])
-df = df[df["release_year"]>=2015]
-df = df.fillna("Unknown")
-
-def find_selected_averages(genre, var1, var2, var3):
-  '''
-  This function groups the dataset by playlist genres and the selected vars (1, 2, and 3). 
-  Then it calls the generate_visual function to generate visuals to display the averages of each
-  playlist genre under the selected variable.
-  '''
+def find_selected_averages(genre, var1, var2, var3, df):
     #drop unessecary columns for value graphs
+    #df is cleaned df
     all_values = df.drop(columns=['track_name', 'track_artist', 'track_popularity', 'track_album_name', 'playlist_name', 'release_year', 'playlist_subgenre'])
     
     #group by genre and show bar graph and means for first selected variable of interest
@@ -27,20 +13,28 @@ def find_selected_averages(genre, var1, var2, var3):
     var2_values = all_values.groupby('playlist_genre')[var2].mean()
     var3_values = all_values.groupby('playlist_genre')[var3].mean()
     
-    generate_visual(genre, var1, var1_values)
-    generate_visual(genre, var2, var2_values)
-    generate_visual(genre, var3, var3_values)
+    #Produce visuals for all chosen variables
+    generate_visuals(genre, var1, var1_values)
+    generate_visuals(genre, var2, var2_values)
+    generate_visuals(genre, var3, var3_values)
     
-def generate_visual(genre, var, values):
-  '''
-  This function wll generate the visuals to display the average values for each of the selected variables
-  and highlights the selected genres by making the column red.
-  '''
+def generate_visuals(genre, var, values):
+    #First creates list of genres represented in the values groups. 
+    #Then assigns the color blue to all genre columns.
+    #Finally, sets chosen genre column to the color red for visibility.
     genre_index = values.index.to_list()
     colors = ["b"] * len(genre_index)
     colors[genre_index.index(genre)] = "r"
     
+    #Finds the max and min of the y values to better scale the bar graph.
+    min_y = min(values.values)
+    max_y = max(values.values)
+    
+    #Creates the bar graph plot.
+    #Adds a horizontal line at the mean of the chosen genre for easier comparisons
     fig, ax = plt.subplots()
+    plt.ylim([min_y-0.5*(max_y-min_y), max_y+0.25*(max_y-min_y)])
+    plt.axhline(y=values[genre], color='black', linestyle='--', label='Genre Mean')
     ax.bar(genre_index, values.values, color=colors)
     plt.show()
   
