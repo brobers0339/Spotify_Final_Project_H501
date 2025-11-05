@@ -1,0 +1,51 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Load dataset
+url = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv"
+spotify = pd.read_csv(url)
+
+# Basic cleaning
+spotify["track_album_release_date"] = pd.to_datetime(spotify["track_album_release_date"], errors="coerce")
+spotify["release_year"] = spotify["track_album_release_date"].dt.year.astype("Int64")
+spotify = spotify[spotify["release_year"] >= 2015].dropna(subset=["playlist_genre"])
+
+# Key audio features
+features = ['danceability', 'energy', 'valence', 'tempo', 'acousticness', 'instrumentalness']
+
+# Normalize features
+scaler = MinMaxScaler()
+spotify_scaled = spotify.copy()
+spotify_scaled[features] = scaler.fit_transform(spotify[features])
+
+# Mood profiles
+mood_profiles = {
+    'party': {'danceability': 0.9, 'energy': 0.9, 'valence': 0.8, 'tempo': 130},
+    'study': {'acousticness': 0.8, 'instrumentalness': 0.7, 'energy': 0.3, 'valence': 0.4},
+    'relax': {'acousticness': 0.7, 'valence': 0.5, 'energy': 0.4, 'tempo': 90},
+    'workout': {'energy': 0.95, 'tempo': 140, 'danceability': 0.8, 'valence': 0.7}
+}
+
+# Convert moods to DataFrame and scale
+mood_df = pd.DataFrame(mood_profiles).T
+mood_df = pd.DataFrame(scaler.transform(mood_df), index=mood_df.index, columns=mood_df.columns)
+
+# Recommendation system
+def recommend_songs_for_mood(mood, top_n=5):
+    if mood not in mood_df.index:
+        print("Choose from:", list(mood_df.index))
+        return
+    
+    mood_vector = mood_df.loc[mood].values.reshape(1, -1)
+    spotify_scaled["similarity_score"] = cosine_similarity(mood_vector, spotify_scaled[features])[0]
+    
+    recs = spotify_scaled.sort_values("similarity_score", ascending=False).head(top_n)
+    print(f"\nTop {top_n} songs for '{mood}' mood:")
+    print(recs[["track_name", "track_artist", "playlist_genre", "similarity_score"]])
+    return recs
+
+# Run
+user_mood = input("Enter your mood (party / study / relax / workout): ").strip().lower()
+recommend_songs_for_mood(user_mood, top_n=5)
