@@ -65,6 +65,9 @@ def get_recommendations(df, genre, chosen_vars, genre_col):
      - Example usage is implemented to see what variable types we will need to make our variables in order for the code to function properly. 
      - Currently only utilizing the first generated recommendation, but is there some other factor we want to use to choose between the final list of 5 or less tracks?
        I tried working with just setting the len requirement to 1, but it doesn't work very well. So eliminating from that final list would be better, or just generate 3 tracks?
+     - I added the stop_while boolean in order to help the addition of the last_recs variable. This will ensure that anytime the recommendation dataframe
+       has no recommendations stored due to the set variable not having any within the mean range, the program will reset back to the last dataset as a failsafe.
+       The stop_while ensures that the for loop is able to terminate the while loop in the case of needing to resort back to the previous recommendation (thus creating a deeper nested if/else).
     '''
     grouped_values = df.groupby(genre_col)
     
@@ -73,19 +76,34 @@ def get_recommendations(df, genre, chosen_vars, genre_col):
 
     #initial recommendation based on first chosen variable (aka most preferred variable by user)
     recs_df = make_recommendation(df, grouped_values, genre, chosen_vars[0], genre_col)
-    
     while len(recs_df) > 5:
+        #boolean to track ensure the for loop can exit the while loop as well in the case of needing to use a previous recommendation set
+        stop_while = False
         
         #iterate through chosen variables first to try and narrow down recommendations only on user preferences
         for var in chosen_vars[1:]:
+            last_recs_df = recs_df
             recs_df = make_recommendation(recs_df, grouped_values, genre, var, genre_col)
             if len(recs_df) <= 5:
+                if len(recs_df) == 0:
+                    recs_df = last_recs_df
+                    stop_while = True
                 break
-            
+
+        # if still more than 10, try adding in other variables to narrow recommendations down further
         for var in all_vars:
+            last_recs_df = recs_df
             recs_df = make_recommendation(recs_df, grouped_values, genre, var, genre_col)
             if len(recs_df) <= 5:
+                if len(recs_df) == 0:
+                    recs_df = last_recs_df
+                    stop_while = True
                 break
+        
+        if stop_while:
+            break
+  
+
             
     #Drops any duplicate track names/artists that may arise, maybe handle this in the cleaning module?
     recs_df = recs_df.drop_duplicates(subset=['track_name', 'track_artist'])
@@ -93,5 +111,7 @@ def get_recommendations(df, genre, chosen_vars, genre_col):
 
 #Example usage
 #For the recommended_tracks, we would replace the manual inputs with the user inputs returned from the streamlit web app
-recommended_tracks = get_recommendations(df, 'hard rock', ['danceability', 'valence', 'energy'], 'playlist_subgenre')
-print(recommended_tracks[['track_name', 'track_artist', 'danceability', 'valence', 'energy', 'track_popularity']])
+for song_genre in ['playlist_genre', 'playlist_subgenre']:
+    for song_type in df[song_genre].unique():
+        recommended_tracks = get_recommendations(df, song_type, ['danceability', 'valence', 'energy'], song_genre)
+        print(recommended_tracks[[song_genre, 'track_name']])
