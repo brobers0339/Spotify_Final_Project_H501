@@ -38,12 +38,3 @@ def generate_visuals(genre, var, values):
     ax.bar(genre_index, values.values, color=colors)
     plt.show()
   
-
-#Test cases
-user_genre = input('Please enter in your preferred genre: ')
-user_var1 = input('Please enter in your most preferred variable within music: ')
-user_var2 = input('Please enter in your second preferred variable within music: ')
-user_var3 = input('Please enter in your third preferred variable within music: ')
-
-
-print(find_selected_averages(user_genre, user_var1, user_var2, user_var3))
