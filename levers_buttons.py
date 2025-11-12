@@ -4,8 +4,6 @@
 #this module doesn't really do anything right now it just messes around with the colors and sliders and other stuff. Consider
 #terminating this module and merging it with visualizations
 
-
-
 #-----IMPORTS-----#
 from instantiation import st, random
 #-------------------------------------------------------------------#
@@ -16,13 +14,18 @@ def get_random_button_type():
     #we use a random choice and update the session state
     st.session_state.button_color = random.choice(types)
 
-
 #this function displays all the buttons, sliders, and text input components on the webpage
+#it now returns a dict with the interactive choices for use by the main app
 def display_doohickies():    
     st.subheader("Interactive Controls")
     
     #basic Buttons
-    st.button("Reset", type="primary")
+    if st.button("Reset", type="primary"):
+        # reset some session state variables (non-destructive)
+        st.session_state.user_text = ""
+        st.session_state.button_color = "primary"
+        st.success("Reset UI controls")
+
     if st.button("Say hello"):
         st.write("Why hello there")
     else:
@@ -71,18 +74,17 @@ def display_doohickies():
         "Select a color for the charts:",
         min_value=0,
         max_value=len(color_options) - 1,
-        value=0, 
-        #format_func=lambda x: color_names[x] 
+        value=0
     )
     selected_color = color_options[color_index]
     st.write(f"Selected Color: **{color_names[color_index]}** ({selected_color})")
     
     st.markdown("---")
     
-    #return the selected color for use in the visualization module
-    return selected_color
-
-    
-
-
-    
+    #return a dictionary of choices so the main app can use them
+    return {
+        "chart_color": selected_color,
+        "chart_color_name": color_names[color_index],
+        "user_text": st.session_state.user_text,
+        "button_type": st.session_state.button_color
+    }

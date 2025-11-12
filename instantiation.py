@@ -22,3 +22,4 @@ def initialize_session_state():
     
     #add other initializations here later if needed
     st.session_state.setdefault('user_text', '')
+    st.session_state.setdefault('survey_data', None)
