@@ -29,3 +29,7 @@ cython_debug/
 # project
 .env
 environment.yml
+
+#ignore this Python stuff
+*__pycache__/
+tracker.txt
