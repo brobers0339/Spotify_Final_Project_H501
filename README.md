@@ -15,11 +15,14 @@ It explores Spotify song data through visualizations and an interactive web app 
 - Testing_Project_Mahya.ipynb – Individual experimentation notebook  
 
 ## How to Run
+
 1. Install dependencies:
    ```bash
-  pip install streamlit pandas matplotlib
+   pip install streamlit pandas matplotlib
 
-1. Run the Streamlit app:
-   ```bash
-  streamlit run spotify_features_app.py
+
+2. Run the Streamlit app:
+streamlit run spotify_features_app.py
+
+
 
