@@ -25,7 +25,7 @@ avg_features.plot(
     x='playlist_genre',
     kind='bar',
     ax=ax,
-    color=["#63E0B0", "#FC33FF", "#33B5FF"][:len(selected_features)],  # your preferred colors
+    color=["#63E0B0", "#FC33FF", "#33B5FF"][:len(selected_features)], 
     edgecolor='black'
 )
 plt.title('Average Features by Genre')
