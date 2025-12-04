@@ -17,4 +17,9 @@ It explores Spotify song data through visualizations and an interactive web app 
 ## How to Run
 1. Install dependencies:
    ```bash
-   streamlit run spotify_features_app.py
+  pip install streamlit pandas matplotlib
+
+1. Run the Streamlit app:
+   ```bash
+  streamlit run spotify_features_app.py
+
