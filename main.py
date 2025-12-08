@@ -70,8 +70,27 @@ else:
             else:
                 rec = get_recommendations(cleaned_df, chosen_genre_for_reco, chosen_vars_for_reco, genre_col)
                 if rec is None or rec.empty:
-                    st.sidebar.info("INFO: No recommendation could be produced with the given inputs.")
+                        st.info("INFO: No recommendation could be produced with the given inputs.")
                 else:
-                    st.write("### Recommendation:")
-                    #show the recommended track(s)
-                    st.dataframe(rec[["track_name", "track_artist"] + [c for c in rec.columns if c not in ("track_name","track_artist")] ].head(1))
+                        st.subheader("Recommended For You")
+                        st.markdown("---") # Top separator
+                        
+                        for index, row in rec.head(4).iterrows():
+                            # 1. Convert duration to MM:SS
+                            duration_min = int(row['duration_sec'] // 60)
+                            duration_sec = int(row['duration_sec'] % 60)
+                            time_str = f"{duration_min}:{duration_sec:02d}"
+                            
+                            # 2. Display using clean Markdown formatting
+                            # Using headers (###) makes the song title large and bold
+                            st.markdown(f"### 🎵 {row['track_name']}")
+                            
+                            # Using distinct lines for details
+                            st.markdown(f"""
+                            **👤 Artist:** {row['track_artist']}  
+                            **💿 Album:** {row['track_album_name']}  
+                            **⏱️ Duration:** {time_str}
+                            """)
+                            
+                            # 3. Add a separator line between songs
+                            st.markdown("---")
