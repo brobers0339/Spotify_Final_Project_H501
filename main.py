@@ -10,7 +10,8 @@ from visualization import (
     display_dataset_info,
     display_track_popularity_histogram,
     display_average_popularity_by_genre,
-    display_selected_averages
+    display_selected_averages,
+    plot_recommendation_comparison
 )
 from data_cleaning import clean_spotify_df
 from recommendation import get_recommendations
