@@ -75,7 +75,7 @@ else:
             else:
                 rec = get_recommendations(cleaned_df, chosen_genre_for_reco, chosen_vars_for_reco, genre_col)
                 if rec is None or rec.empty:
-                    st.sidebar.info("INFO: No recommendation could be produced with the given inputs.")
+                        st.info("INFO: No recommendation could be produced with the given inputs.")
                 else:
                         st.subheader("Recommended For You")
                         st.markdown("---") # Top separator
