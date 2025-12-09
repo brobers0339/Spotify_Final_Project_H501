@@ -54,16 +54,6 @@ def make_recommendation(df: pd.DataFrame, grouped_df, chosen_genre: str, chosen_
 
     return filtered_df
 
-    var_mean_range = [chosen_var_mean_value - (chosen_var_mean_value * 0.1),
-                      chosen_var_mean_value + (chosen_var_mean_value * 0.1)]
-
-    filtered_df = df[(df[genre_col] == chosen_genre) &
-                     (df[chosen_var] >= var_mean_range[0]) &
-                     (df[chosen_var] <= var_mean_range[1])]
-
-    return filtered_df
-
-
 def get_recommendations(df: pd.DataFrame, genre: str, chosen_vars: list, genre_col: str) -> pd.DataFrame:
     """
     >   Return top recommended tracks for the given genre and chosen vars.
@@ -88,7 +78,7 @@ def get_recommendations(df: pd.DataFrame, genre: str, chosen_vars: list, genre_c
 
     #try to shrink to <= 5 using chosen_vars and then other vars
     while len(recs_df) > 20:
-                stop_while = False
+            stop_while = False
 
             for var in chosen_vars[1:]:
                 last_recs_df = recs_df
