@@ -9,7 +9,8 @@ from visualization import (
     display_dataset_info,
     display_track_popularity_histogram,
     display_average_popularity_by_genre,
-    display_selected_averages
+    display_selected_averages,
+    plot_recommendation_comparison
 )
 from data_cleaning import clean_spotify_df
 from recommendation import get_recommendations
@@ -94,3 +95,11 @@ else:
                             
                             # 3. Add a separator line between songs
                             st.markdown("---")
+                        with st.expander("**Why these songs? (Analysis)**"):
+                            plot_recommendation_comparison(
+                                recs_df=rec,
+                                full_df=cleaned_df,
+                                genre=chosen_genre_for_reco,
+                                chosen_vars=chosen_vars_for_reco,
+                                genre_col=genre_col
+                            )

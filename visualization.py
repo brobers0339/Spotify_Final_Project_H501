@@ -3,6 +3,7 @@
 #-----IMPORTS-----#
 from instantiation import st, plt, pd
 import matplotlib.pyplot as mplplt
+import numpy as np
 #-------------------------------------------------------------------#
 
 #-----DISPLAY-GENERAL-DATASET-INFO-----#
@@ -113,3 +114,50 @@ def generate_visuals_streamlit(genre: str, var: str, values, selected_color: str
     mplplt.tight_layout()
     st.pyplot(fig)
     st.markdown("-----")
+
+#this function visualizes how the recommended songs compare to the genre average
+def plot_recommendation_comparison(recs_df: pd.DataFrame, full_df: pd.DataFrame, genre: str, chosen_vars: list, genre_col: str):
+    """
+    > Visualizes how the recommended songs compare to the genre average 
+      for the specific variables the user selected.
+    """
+    if not chosen_vars or recs_df.empty:
+        return
+
+    # 1. Calculate Averages
+    # Avg of the 4(ish) recommended songs
+    rec_avg = recs_df[chosen_vars].mean()
+    
+    # Avg of the entire genre (the "baseline")
+    genre_avg = full_df[full_df[genre_col] == genre][chosen_vars].mean()
+
+    # 2. Prepare Data for Plotting
+    labels = [var.title() for var in chosen_vars]
+    x = np.arange(len(labels))  # the label locations
+    width = 0.35  # the width of the bars
+
+    fig, ax = mplplt.subplots(figsize=(8, 5))
+    
+    # Plot two sets of bars
+    rects1 = ax.bar(x - width/2, rec_avg, width, label='Your Recs', color='#1DB954') # Spotify Green
+    rects2 = ax.bar(x + width/2, genre_avg, width, label=f'Typical {genre.title()}', color='gray', alpha=0.5)
+
+    # Styling
+    ax.set_ylabel('Value')
+    ax.set_title('Comparison: Your Recs vs. Genre Average')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+    ax.grid(axis='y', linestyle='--', alpha=0.3)
+
+    # 3. Display
+    st.pyplot(fig)
+    
+    # 4. (Optional) Text Insight
+    # Calculate the biggest difference to give a "smart" insight
+    diffs = (rec_avg - genre_avg) / genre_avg * 100
+    biggest_change_var = diffs.abs().idxmax()
+    change_val = diffs[biggest_change_var]
+    
+    direction = "higher" if change_val > 0 else "lower"
+    st.caption(f"💡 Insight: These recommendations tend to have **{direction} {biggest_change_var}** ({change_val:.1f}%) than the average {genre} song.")
