@@ -88,8 +88,7 @@ def get_recommendations(df: pd.DataFrame, genre: str, chosen_vars: list, genre_c
 
     #try to shrink to <= 5 using chosen_vars and then other vars
     while len(recs_df) > 20:
-        while len(recs_df) > 5:
-            stop_while = False
+                stop_while = False
 
             for var in chosen_vars[1:]:
                 last_recs_df = recs_df
