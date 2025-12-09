@@ -18,6 +18,9 @@ def get_random_button_type():
 #it now returns a dict with the interactive choices for use by the main app
 
 def display_doohickies(): 
+
+    #commented this out because these were just random buttons and proof of concepts from earlier in development
+    #I don't want to delete them in case we need another button or something we can just grab it from here
     """   
     st.subheader("Interactive Controls")
     #basic Buttons
