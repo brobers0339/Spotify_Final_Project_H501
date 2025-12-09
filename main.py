@@ -1,6 +1,7 @@
 #-----PROGRAM CORE: MAIN-----#
 #main.py
 #-----IMPORTS-----#
+from ui_controls import apply_global_theme
 from instantiation import st, pd, initialize_session_state
 from data_storage import get_spotify_dataset
 from survey import display_user_survey
@@ -17,7 +18,10 @@ from recommendation import get_recommendations
 
 #-----PROGRAM-INITIALIZATION-----#
 initialize_session_state()
+apply_global_theme()
 spotify_songs_dataset = get_spotify_dataset()
+
+
 
 #-----USER-SURVEY-----#
 if not spotify_songs_dataset.empty:
@@ -75,3 +79,4 @@ else:
                     st.write("### Recommendation:")
                     #show the recommended track(s)
                     st.dataframe(rec[["track_name", "track_artist"] + [c for c in rec.columns if c not in ("track_name","track_artist")] ].head(1))
+
