@@ -1,10 +1,9 @@
 from instantiation import st
 from data_storage import get_spotify_dataset
 from data_cleaning import clean_spotify_df
-from recommendation import get_recommendations
+from recommendation import Recommendation
 from visualization import plot_recommendation_comparison
 from survey import display_user_survey
-
 #-------------------------------------------------------------------#
 
 spotify_songs_dataset = get_spotify_dataset()
@@ -19,7 +18,7 @@ else:
 
 # -----RECOMMENDATION UI----- #
 if st.session_state.survey_data is not None:
-    with st.popover("New Survey Submission"):
+    with st.popover("Edit Survey Submission"):
     #-----USER-SURVEY-----#
         if not spotify_songs_dataset.empty:
             display_user_survey(spotify_songs_dataset)
@@ -31,13 +30,15 @@ if st.session_state.survey_data is not None:
     chosen_vars = st.session_state.survey_data['Chosen Vars'][0]
     user_name = st.session_state.survey_data['User Name'][0]
         
+    recommendation = Recommendation(cleaned_df, chosen_genre, chosen_vars, chosen_subgenre)
+
     st.markdown(f"<h1 style='text-align: center;'> Welcome {user_name}! </h1>", unsafe_allow_html=True)
     if chosen_subgenre != "No Preferred Subgenre":
         st.markdown(f"<p style='text-align: center;'> Based on your genre selection of <span style='color:red;'><b>{chosen_genre}</b></span> and subgenre selection of <span style='color:red'><b>{chosen_subgenre}</b></span>, here are some recommended tracks for you: </p>", unsafe_allow_html=True)
-        reco = get_recommendations(cleaned_df, chosen_subgenre, chosen_vars, genre_col="playlist_subgenre")
+        reco = recommendation.get_recommendations(genre_col="playlist_subgenre")
     else:
         st.markdown(f"<p style='text-align: center;'> Based on your genre selection of <span style='color:red;'><b>{chosen_genre}</b></span>, here are some recommended tracks for you: </p>", unsafe_allow_html=True)
-        reco = get_recommendations(cleaned_df, chosen_genre, chosen_vars, genre_col="playlist_genre")
+        reco = recommendation.get_recommendations(genre_col="playlist_genre")
 
     st.subheader("Recommended For You")
     st.markdown("---") # Top separator

@@ -4,15 +4,6 @@
 import pandas as pd
 import os
 from instantiation import st
-#-------------------------------------------------------------------#
-
-
-
-#-----DATASET-URL-----#
-TARGET_URL = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv"
-#-----SURVEY-STORAGE-----#
-SURVEY_DATA_PATH = "user_survey_data.csv"
-
 
 
 #-----SPOTIFY-DATASET-HANDLING-----#
@@ -32,7 +23,7 @@ def load_data(url: str) -> pd.DataFrame:
 
 #this function actually retrieves the cached dataset from the previous function
 def get_spotify_dataset() -> pd.DataFrame:
-    return load_data(TARGET_URL)
+    return load_data(url)
 
 
 
@@ -40,10 +31,10 @@ def get_spotify_dataset() -> pd.DataFrame:
 #loads the preexisting survey data of the user or an empty dataframe
 def initialize_survey_data() -> pd.DataFrame:
     #if the path exists to the survey's save location...
-    if os.path.exists(SURVEY_DATA_PATH):
+    if os.path.exists(survey_path):
         try:
             #try to read it
-            return pd.read_csv(SURVEY_DATA_PATH)
+            return pd.read_csv(survey_path)
         #if reading failed, throw an error 
         except Exception as e:
             st.error(f"ERROR: Failed to load survey data: {e}")
@@ -55,25 +46,17 @@ def initialize_survey_data() -> pd.DataFrame:
 
 
 #this function saves the survey data by appending a single survey response to a CSV and updating the session state
-def save_survey_response(user_name: str, genre: str, subgenre: str):
+def save_survey_response(user_name: str, genre: str, subgenre: str, chosen_vars: list):
     new_entry = pd.DataFrame([{
         "User Name": user_name,
         "Preferred Genre": genre,
-        "Preferred Subgenre": subgenre
+        "Preferred Subgenre": subgenre,
+        'Chosen Vars': chosen_vars
     }])
+    
+    st.session_state.survey_data = new_entry
+    st.write(st.session_state.survey_data)
 
-    #ensure that a valid session data frame exists
-    if "survey_data" not in st.session_state:
-        st.session_state.survey_data = initialize_survey_data()
-
-    #append the new data in session
-    st.session_state.survey_data = pd.concat(
-        [st.session_state.survey_data, new_entry], ignore_index=True
-    )
-
-    #save the file locally
-    st.session_state.survey_data.to_csv(SURVEY_DATA_PATH, index=False)
-    st.success("✅ Your responses have been saved!")
 
 
 

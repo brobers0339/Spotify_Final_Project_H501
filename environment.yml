@@ -3,6 +3,20 @@ app:
   author: "..."
   debug: false
 
+dependencies:
+  - python=3.11.13
+  - pip
+  - pip:
+      - streamlit
+      - pandas
+      - numpy
+      - scikit-learn
+      - matplotlib
+      - seaborn
+      - plotly
+      - streamlit-option-menu
+      - streamlit-
+      
 data:
   dataset_path: "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv"
   id_column: "track_id"

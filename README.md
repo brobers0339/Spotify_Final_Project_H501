@@ -1,6 +1,24 @@
-# Spotify_Final_Project_H501
+<h1> Spotify Final Project H501 </h1>
+<h5> Authors: Bella Roberson, Muhammad Mohsin Khan, Anuska Acharya, Mahya Tazike, Sakshi Kapadnis </h5>
+<h2><u><b> Overview </b></u></h2>
+<p> The purpose of this app is to produce a Spotify song recommendation based on inputted genre and subgenre preferences as well as various musical variable preferences to help create a more specialized recommendation algorithm for any Spotify user to utilize. Within our app, we provide a basic survey to allow for user inputs of all preferences and their name for a more personalized experience. From there, there will be a handful of recommendations provided immediately after the input with a specialized dashboard to the user as well. On the sidebar, there is another page that provides the user with different analytical graphs for them to view in order to see how their preferences line up with other genres and possibly determine what other genres might be close to their liking. We believe that any user enjoyer (especially those utilizing Spotify for music) can greatly benefit from utilizing this app in order to receive the best personalized recommendation without having to worry about track or artist popularity or any sort of external influence from the company alone that might alter their song recommendations. </p>
 
-<b> An important limitation within this project is the inclusion of ONLY spotify analytics and music access. Therefore, only these analytics and music songs/artists are displayed and recommended as a result of this project.</b>
+<h2><u><b> Data Description </b></u></h2>
+The data we utilized for our web app is a public Kaggle dataset titled "30,000 Spotify Songs" by Joakim Arvidsson. This dataset consisted of 23 columns and 30,000 rows. During the cleaning process, we removed any songs that were before the year of 2015 due to an intense amount of missingness from the years prior to this date. This year was extracted from the "track_album_release_date" and put into it's own column titled "release_year". Some columns we utilized included "duration_ms", "acousticness", "track_popularity", and "valence". We converted the "duration_ms" values from milliseconds to seconds for better readability and computational purposes. We also removed the columns "track_id", "track_album_id", "playlist_id", and "track_album_release_date" due to their unneeded information and data. All remaining missing values were filled with "Unknown" instead.
+
+<h2><u><b> Algorithm Description </b></u></h2>
+The beginning algorithm driving our app is based on the user-inputted survey on the main dashboard. Once this information is properly entered (which is confirmed through try-except methods during the user input stage), the app takes this information and begins both the mathematical and visualization generation process. For the both generation processess, the algorithm groups the three selected variables/features by the selected genre or subgenre and calculates the respective averages for each genre and feature combination. For the visualizations, the program creates bar graphs to display the different statistics, including one to compare all of the different features within one genre against the others. Continuing the mathematical process, the program filters through the original cleaned data set dependent on a variable range surrounding the mean value of each feature. Any songs that have their feature value within that range remain in the data frame until there are less than 20 songs left; at which point the top 5 songs are recommended to the user. This information is further analyzed through another bar graph that also determines how much higher or lower the user preferred genre average compares against others. The user is able to repeat or edit their original survey response at any time for unlimited repeatability. 
+
+<h2><u><b> Tools Used </b></u></h2>
+<b> Class Lectures:</b>
+These allowed us to further our knowledge in the field of python and helped us along the way with various bugs and issues we would encounter.
+<b> Streamlit Documentation </b>
+This documentation greatly helped us understand and be able to create the web app we produced. Most of us were new to the platform, so we greatly utilized the documentation to understand the different components and be able to determine the best options for the app we wanted to develop.
+<b> VS Code </b>
+All of our programming (both individual and combined) was conducted through VS Code in Python.
+
+<h2><u><b> Ethical Concerns </b></u></h2>
+<b> An important limitation within this project is the inclusion of ONLY Spotify analytics and music access. Therefore, only these analytics and music songs/artists are displayed and recommended as a result of this project.</b> A primary ethical concern with this program would be the usage of a public data frame that is continuously going out of date. Considering how variable the market is for streaming services, it is very likely this dataset will continue to become outdated as time passes. The usage of a public data frame also brings into question how accurate the data truly is and what underlying biases might be present. The results of this program are simply recommendations and are not guaranteed results, which is important to understand when utilizing the app. While we have attempted our best at creating a solution to produce accurate and reliable recommendations, there is a chance that the recommendation may not be 100% accurate dependent on user preference and specifications. Understanding this risk will ensure that our web app can maintain transparency and understanding for all users!
 
 <h3><u>To run this program, do the following:</u></h3>
 
@@ -10,48 +28,3 @@
 4. Type "streamlit run main.py"
 5. A new window should open up in your default browser and the webpage should appear
 6. To close the application, pull up your terminal again, and hit CTRL+C to terminate the program
-
-<h3><u>Rough draft of environment.yml:</u></h3>
-
-```python
-app:
-  name: "Spotify Final Project"
-  author: "..."
-  debug: false
-
-data:
-  dataset_path: "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv"
-  id_column: "track_id"
-  title_column: "track_name"
-  artist_column: "artist_name"
-
-features:
-  primary_feature: "danceability"
-  secondary_filters:
-    - "energy"
-    - "valence"
-  allowed_features:
-    - danceability
-    - energy
-    - valence
-    - acousticness
-    - instrumentalness
-    - liveness
-    - loudness
-    - speechiness
-    - tempo
-    - duration_ms
-    - key
-    - mode
-
-logging:
-  level: "INFO"
-  log_to_file: true
-  file_path: "logs/app.log"
-
-performance:
-  cache_results: true
-  cache_ttl_seconds: 600 #cache similarity computations for 10 minutes
-
-
-```
