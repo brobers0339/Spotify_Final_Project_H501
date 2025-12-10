@@ -1,0 +1,9 @@
+streamlit==1.51.0
+python==3.12.7
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+python-dotenv
+plotly
