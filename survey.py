@@ -63,4 +63,3 @@ def display_user_survey(df: pd.DataFrame):
     #survey_df = get_survey_data()
     #st.dataframe(survey_df)
     
-    

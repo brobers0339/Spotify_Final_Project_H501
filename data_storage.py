@@ -14,7 +14,7 @@ survey_path = os.getenv("SURVEY_DATA_PATH")
 #-----SPOTIFY-DATASET-HANDLING-----#
 @st.cache_data
 #this function loads the dataset from the given target URL and then caches it for later
-def load_data(url: str) -> pd.DataFrame:
+def load_data() -> pd.DataFrame:
     """Load and cache the Spotify dataset."""
     if not url:
         st.error("ERROR: TARGET_URL is not set in the .env file.")
