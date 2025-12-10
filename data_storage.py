@@ -10,13 +10,15 @@ from instantiation import st
 @st.cache_data
 #this function loads the dataset from the given target URL and then caches it for later
 def load_data(url: str) -> pd.DataFrame:
-    #check to see if the dataset was actually loaded or not and throw an error if not
+    """Load and cache the Spotify dataset."""
+    if not url:
+        st.error("ERROR: TARGET_URL is not set in the .env file.")
+        return pd.DataFrame()
+
     try:
-        data = pd.read_csv(url)
-        return data
+        return pd.read_csv(url)
     except Exception as e:
         st.error(f"ERROR: Dataset could not be loaded: {e}")
-        #on failure, return an empty dataframe
         return pd.DataFrame()
 
 
@@ -67,3 +69,4 @@ def get_survey_data() -> pd.DataFrame:
     else:
         st.session_state.survey_data = initialize_survey_data()
         return st.session_state.survey_data
+
