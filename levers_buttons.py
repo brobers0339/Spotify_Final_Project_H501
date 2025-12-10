@@ -16,12 +16,16 @@ def get_random_button_type():
 
 #this function displays all the buttons, sliders, and text input components on the webpage
 #it now returns a dict with the interactive choices for use by the main app
-def display_doohickies():    
+
+def display_doohickies(): 
+
+    #commented this out because these were just random buttons and proof of concepts from earlier in development
+    #I don't want to delete them in case we need another button or something we can just grab it from here
+    """   
     st.subheader("Interactive Controls")
-    
     #basic Buttons
     if st.button("Reset", type="primary"):
-        # reset some session state variables (non-destructive)
+        #reset some session state variables (non-destructive)
         st.session_state.user_text = ""
         st.session_state.button_color = "primary"
         st.success("Reset UI controls")
@@ -65,6 +69,9 @@ def display_doohickies():
         st.write("Start typing to see the magic!")
         
     st.markdown("---")
+    """
+
+
 
     #slider to Change Bar Chart Color
     st.write("### Interactive Chart Color Selection")

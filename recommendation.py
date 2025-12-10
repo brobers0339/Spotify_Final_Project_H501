@@ -9,6 +9,22 @@ def make_recommendation(df: pd.DataFrame, grouped_df, chosen_genre: str, chosen_
         return pd.DataFrame()  # nothing to do
 
     # if the group doesn't exist, return empty
+#-----RECOMMENDATION MODULE-----#
+#recommendation.py
+#-----IMPORTS-----#
+import pandas as pd
+#-------------------------------------------------------------------#
+#-----RECOMMENDATION LOGIC-----#
+#merging logic from original recommendation code
+def make_recommendation(df: pd.DataFrame, grouped_df, chosen_genre: str, chosen_var: str, genre_col: str) -> pd.DataFrame:
+    """
+    > Filter df for chosen_genre and chosen_var within +/-10% of the group's mean.
+
+    """
+    if chosen_var not in df.columns:
+        return pd.DataFrame()  #nothing to do
+
+    #if the group doesn't exist, return empty
     try:
         group = grouped_df.get_group(chosen_genre)
     except Exception:
@@ -62,32 +78,32 @@ def get_recommendations(df: pd.DataFrame, genre: str, chosen_vars: list, genre_c
 
     #try to shrink to <= 5 using chosen_vars and then other vars
     while len(recs_df) > 20:
-        stop_while = False
+            stop_while = False
 
-        for var in chosen_vars[1:]:
-            last_recs_df = recs_df
-            recs_df = make_recommendation(recs_df, grouped_values, genre, var, genre_col)
-            if len(recs_df) <= 20:
-                if len(recs_df) == 0:
-                    recs_df = last_recs_df
-                    stop_while = True
+            for var in chosen_vars[1:]:
+                last_recs_df = recs_df
+                recs_df = make_recommendation(recs_df, grouped_values, genre, var, genre_col)
+                if len(recs_df) <= 20:
+                    if len(recs_df) == 0:
+                        recs_df = last_recs_df
+                        stop_while = True
+                    break
+
+            for var in all_vars:
+                last_recs_df = recs_df
+                recs_df = make_recommendation(recs_df, grouped_values, genre, var, genre_col)
+                if len(recs_df) <= 20:
+                    if len(recs_df) == 0:
+                        recs_df = last_recs_df
+                        stop_while = True
+                    break
+
+            if stop_while:
                 break
 
-        for var in all_vars:
-            last_recs_df = recs_df
-            recs_df = make_recommendation(recs_df, grouped_values, genre, var, genre_col)
-            if len(recs_df) <= 20:
-                if len(recs_df) == 0:
-                    recs_df = last_recs_df
-                    stop_while = True
+            #if we loop forever (defensive), break
+            if len(recs_df) == 0:
                 break
-
-        if stop_while:
-            break
-
-        #if we loop forever (defensive), break
-        if len(recs_df) == 0:
-            break
 
     #drops duplicates on track + artist then return the first recommendation
     if not recs_df.empty and {'track_name', 'track_artist'}.issubset(recs_df.columns):
