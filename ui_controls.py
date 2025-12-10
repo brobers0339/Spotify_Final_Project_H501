@@ -7,8 +7,8 @@ def apply_global_theme():
 
         /*-----EXPAND-SCROLLABLE-AREA-----*/
         .block-container {
-            max-width: 95% !important;
-            padding-top: 2rem !important;
+            max-width: 98% !important;
+            padding-top: 2rem 1.5rem !important;
         }
 
         html, body, .stApp {
@@ -21,7 +21,7 @@ def apply_global_theme():
 
         /*-----BACKGROUND-IMAGE-----*/
         .stApp {
-            background: url('https://images.unsplash.com/photo-1483347756197-71ef80e95f73?ixlib=rb-1.2.1&q=85&fm=jpg&w=3840&fit=max') 
+            background: url('https://www.nps.gov/npgallery/GetAsset/98bfa86a-4e3a-4cec-b641-9dccd7377fab/proxy/hires?') 
                 no-repeat center center fixed !important;
             background-size: cover !important;
         }
@@ -33,19 +33,28 @@ def apply_global_theme():
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
+
+            /* Blur applies to everything behind this layer (the background) */
             backdrop-filter: blur(10px);
+
+            /* Tint layer */
             background: rgba(0, 20, 0, 0.55);
-            z-index: 0;
+
+            /* KEEP THIS ABOVE THE BACKGROUND BUT BELOW THE UI */
+            z-index: -1;
+
+            /* Make sure this layer never blocks clicks */
+            pointer-events: none;
         }
-        .main > div {
+
+        /* Ensure all Streamlit content renders ABOVE the tint */
+        .stApp, .stApp > * {
             position: relative;
-            z-index: 1;
+            z-index: 1 !important;
         }
-        /*---------------------------------*/
-
-
+        
         /*-----GENERAL-TEXT-COLOR-----*/
-        h1, h2, h3, label, p, span, div {
+        h1, h2, h3, label, p, div {
             color: #eaffea !important;
         }
         /*---------------------------------*/
@@ -97,21 +106,34 @@ def apply_global_theme():
             background-color: rgba(20, 40, 20, 0.9) !important;
         }
         /*---------------------------------*/
+        
+        /* ----- MATCH MULTISELECT INPUT TO SELECTBOX ----- */
+        div[data-baseweb="select"] {
+            background-color: rgba(10, 20, 10, 0.85) !important;
+            border: 1px solid #1DB954 !important;
+            border-radius: 6px !important;
+            color: #eaffea !important;
+        }
 
-        /*-----MULTISELECT-FIX-----*/
+        /* Inside area where selected tags appear */
+        div[data-baseweb="select"] > div {
+            background-color: rgba(10, 20, 10, 0.85) !important;
+        }
+
+        /* Search text inside the multiselect */
+        div[data-baseweb="select"] input {
+            color: #eaffea !important;
+        }
+
+        /* Selected tag styling (you already have this; just keep it) */
         .stMultiSelect div[data-baseweb="tag"] {
             background-color: rgba(0, 80, 0, 0.7) !important;
             color: #eaffea !important;
             border: 1px solid #1DB954 !important;
             border-radius: 5px !important;
         }
-
-        /* Remove red X button color */
-        .stMultiSelect button {
-            color: #bbffbb !important;
-        }
         /*---------------------------------*/
-
+        
         /*-----BUTTON-STYLE-----*/
         .stButton>button {
             background-color: #1DB954 !important;
@@ -125,6 +147,6 @@ def apply_global_theme():
         }
 
         </style>
-
+        <div class="background-layer"></div>
         <div class="blur-overlay"></div>
     """, unsafe_allow_html=True)

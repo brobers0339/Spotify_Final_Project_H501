@@ -4,35 +4,32 @@
 import pandas as pd
 import os
 from instantiation import st
-#-------------------------------------------------------------------#
+from dotenv import load_dotenv
 
-
-
-#-----DATASET-URL-----#
-TARGET_URL = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv"
-#-----SURVEY-STORAGE-----#
-SURVEY_DATA_PATH = "user_survey_data.csv"
-
-
+load_dotenv()  #load environment variables from .env file if present
+url = os.getenv("TARGET_URL")
+survey_path = os.getenv("SURVEY_DATA_PATH")
 
 #-----SPOTIFY-DATASET-HANDLING-----#
 @st.cache_data
 #this function loads the dataset from the given target URL and then caches it for later
 def load_data(url: str) -> pd.DataFrame:
-    #check to see if the dataset was actually loaded or not and throw an error if not
+    """Load and cache the Spotify dataset."""
+    if not url:
+        st.error("ERROR: TARGET_URL is not set in the .env file.")
+        return pd.DataFrame()
+
     try:
-        data = pd.read_csv(url)
-        return data
+        return pd.read_csv(url)
     except Exception as e:
         st.error(f"ERROR: Dataset could not be loaded: {e}")
-        #on failure, return an empty dataframe
         return pd.DataFrame()
 
 
 
 #this function actually retrieves the cached dataset from the previous function
 def get_spotify_dataset() -> pd.DataFrame:
-    return load_data(TARGET_URL)
+    return load_data(url)
 
 
 
@@ -40,10 +37,10 @@ def get_spotify_dataset() -> pd.DataFrame:
 #loads the preexisting survey data of the user or an empty dataframe
 def initialize_survey_data() -> pd.DataFrame:
     #if the path exists to the survey's save location...
-    if os.path.exists(SURVEY_DATA_PATH):
+    if os.path.exists(survey_path):
         try:
             #try to read it
-            return pd.read_csv(SURVEY_DATA_PATH)
+            return pd.read_csv(survey_path)
         #if reading failed, throw an error 
         except Exception as e:
             st.error(f"ERROR: Failed to load survey data: {e}")
@@ -55,25 +52,17 @@ def initialize_survey_data() -> pd.DataFrame:
 
 
 #this function saves the survey data by appending a single survey response to a CSV and updating the session state
-def save_survey_response(user_name: str, genre: str, subgenre: str):
+def save_survey_response(user_name: str, genre: str, subgenre: str, chosen_vars: list):
     new_entry = pd.DataFrame([{
         "User Name": user_name,
         "Preferred Genre": genre,
-        "Preferred Subgenre": subgenre
+        "Preferred Subgenre": subgenre,
+        'Chosen Vars': chosen_vars
     }])
+    
+    st.session_state.survey_data = new_entry
+    st.write(st.session_state.survey_data)
 
-    #ensure that a valid session data frame exists
-    if "survey_data" not in st.session_state:
-        st.session_state.survey_data = initialize_survey_data()
-
-    #append the new data in session
-    st.session_state.survey_data = pd.concat(
-        [st.session_state.survey_data, new_entry], ignore_index=True
-    )
-
-    #save the file locally
-    st.session_state.survey_data.to_csv(SURVEY_DATA_PATH, index=False)
-    st.success("✅ Your responses have been saved!")
 
 
 
@@ -84,3 +73,5 @@ def get_survey_data() -> pd.DataFrame:
     else:
         st.session_state.survey_data = initialize_survey_data()
         return st.session_state.survey_data
+
+

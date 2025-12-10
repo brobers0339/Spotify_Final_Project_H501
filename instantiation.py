@@ -5,10 +5,13 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 import random
+import os
+from dotenv import load_dotenv
 #-------------------------------------------------------------------#
 
-
-
+load_dotenv()  #load environment variables from .env file if present
+url = os.getenv("TARGET_URL")
+survey_path = os.getenv("SURVEY_DATA_PATH")
 #expose common libraries used across modules
 __all__ = ["pd", "st", "plt", "random", "initialize_session_state"]
 
@@ -23,3 +26,5 @@ def initialize_session_state():
     #add other initializations here later if needed
     st.session_state.setdefault('user_text', '')
     st.session_state.setdefault('survey_data', None)
+    st.session_state.setdefault('preferred_genre', '')
+    st.session_state.setdefault('preferred_subgenre', '')
