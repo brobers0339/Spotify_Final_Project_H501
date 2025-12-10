@@ -102,7 +102,10 @@ def generate_visuals_streamlit(genre: str, var: str, values, col, subgenre: bool
 
     fig, ax = plt.subplots()
     #changed this ylim to make sure the lim is never negative
-    plt.ylim([min_y - 0.5 * (max_y - min_y) if min_y - 0.5 * (max_y - min_y) > 0 else 0, max_y + 0.25 * (max_y - min_y)])
+    if var != 'loudness':  #loudness can be negative, so we skip this adjustment
+        plt.ylim([min_y - 0.5 * (max_y - min_y) if min_y - 0.5 * (max_y - min_y) > 0 else 0, max_y + 0.25 * (max_y - min_y)])
+    else:
+        plt.ylim([min_y - 0.5 * (max_y - min_y), max_y + 0.25 * (max_y - min_y)])
     #horizontal line for chosen genre mean (if present)
     if genre in values.index:
         plt.axhline(y = values[genre], color = 'black', linestyle = '--', label = 'Genre Mean')

@@ -20,19 +20,18 @@ class Recommendation:
             group = grouped_df.get_group(given_genre)
         except Exception:
             return pd.DataFrame()
-
         chosen_var_mean_value = group[chosen_var].mean()
         if pd.isna(chosen_var_mean_value):
             return pd.DataFrame()
 
         # Your loosened 50% range
-        var_mean_range = [chosen_var_mean_value - (chosen_var_mean_value * 0.5),
-                        chosen_var_mean_value + (chosen_var_mean_value * 0.5)]
+        var_mean_range = [abs(chosen_var_mean_value - (chosen_var_mean_value * 0.1)),
+                        abs(chosen_var_mean_value + (chosen_var_mean_value * 0.1))]
 
         # Filter
         filtered_df = df[(df[genre_col] == given_genre) &
-                        (df[chosen_var] >= var_mean_range[0]) &
-                        (df[chosen_var] <= var_mean_range[1])].copy() # .copy() ensures we can modify it below
+                        (abs(df[chosen_var]) >= var_mean_range[0]) &
+                        (abs(df[chosen_var]) <= var_mean_range[1])].copy() # .copy() ensures we can modify it below
 
         # --- THE FIX: SORT BY CLOSENESS TO MEAN ---
         # We calculate the absolute difference between the song's value and the group mean
@@ -66,7 +65,6 @@ class Recommendation:
             given_genre = self.chosen_subgenre
         else:
             given_genre = self.chosen_genre
-        
         recs_df = self.make_recommendation(self.df, grouped_values, given_genre, self.chosen_vars[0], genre_col)
         #if no result, return empty
         if recs_df.empty:
@@ -104,5 +102,6 @@ class Recommendation:
         #drops duplicates on track + artist then return the first recommendation
         if not recs_df.empty and {'track_name', 'track_artist'}.issubset(recs_df.columns):
             recs_df = recs_df.drop_duplicates(subset = ['track_name', 'track_artist'])
-
+        
+        
         return recs_df.head(4)  # Return up to 4 recommendations
