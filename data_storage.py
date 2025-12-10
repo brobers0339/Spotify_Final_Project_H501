@@ -4,7 +4,11 @@
 import pandas as pd
 import os
 from instantiation import st
+from dotenv import load_dotenv
 
+load_dotenv()  #load environment variables from .env file if present
+url = os.getenv("TARGET_URL")
+survey_path = os.getenv("SURVEY_DATA_PATH")
 
 #-----SPOTIFY-DATASET-HANDLING-----#
 @st.cache_data
@@ -69,4 +73,5 @@ def get_survey_data() -> pd.DataFrame:
     else:
         st.session_state.survey_data = initialize_survey_data()
         return st.session_state.survey_data
+
 
