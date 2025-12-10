@@ -7,15 +7,15 @@ dependencies:
   - python=3.11.13
   - pip
   - pip:
-      - streamlit
+      - streamlit==1.15.0
       - pandas
       - numpy
       - scikit-learn
       - matplotlib
       - seaborn
       - plotly
-      - streamlit-option-menu
-      - streamlit-
+      - python-dotenv
+
       
 data:
   dataset_path: "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv"
