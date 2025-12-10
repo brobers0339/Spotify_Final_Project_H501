@@ -5,6 +5,7 @@ import pandas as pd
 import os
 from instantiation import st
 from dotenv import load_dotenv
+#-------------------------------------------------------------------#
 
 load_dotenv()  #load environment variables from .env file if present
 url = os.getenv("TARGET_URL")
@@ -29,7 +30,7 @@ def load_data(url: str) -> pd.DataFrame:
 
 #this function actually retrieves the cached dataset from the previous function
 def get_spotify_dataset() -> pd.DataFrame:
-    return load_data(url)
+    return load_data()
 
 
 

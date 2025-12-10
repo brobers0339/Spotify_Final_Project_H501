@@ -5,13 +5,8 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 import random
-import os
-from dotenv import load_dotenv
 #-------------------------------------------------------------------#
 
-load_dotenv()  #load environment variables from .env file if present
-url = os.getenv("TARGET_URL")
-survey_path = os.getenv("SURVEY_DATA_PATH")
 #expose common libraries used across modules
 __all__ = ["pd", "st", "plt", "random", "initialize_session_state"]
 
