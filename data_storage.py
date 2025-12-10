@@ -27,7 +27,6 @@ def load_data(url: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 
-
 #this function actually retrieves the cached dataset from the previous function
 def get_spotify_dataset() -> pd.DataFrame:
     return load_data()
