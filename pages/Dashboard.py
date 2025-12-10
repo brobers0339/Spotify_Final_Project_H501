@@ -33,13 +33,12 @@ if st.session_state.survey_data is not None:
     recommendation = Recommendation(cleaned_df, chosen_genre, chosen_vars, chosen_subgenre)
 
     st.markdown(f"<h1 style='text-align: center;'> Welcome {user_name}! </h1>", unsafe_allow_html=True)
-    if chosen_subgenre != "No Preferred Subgenre":
+    if chosen_subgenre not in ["No Preferred Subgenre", None]:
         st.markdown(f"<p style='text-align: center;'> Based on your genre selection of <span style='color:red;'><b>{chosen_genre}</b></span> and subgenre selection of <span style='color:red'><b>{chosen_subgenre}</b></span>, here are some recommended tracks for you: </p>", unsafe_allow_html=True)
         reco = recommendation.get_recommendations(genre_col="playlist_subgenre")
     else:
         st.markdown(f"<p style='text-align: center;'> Based on your genre selection of <span style='color:red;'><b>{chosen_genre}</b></span>, here are some recommended tracks for you: </p>", unsafe_allow_html=True)
         reco = recommendation.get_recommendations(genre_col="playlist_genre")
-
     st.subheader("Recommended For You")
     st.markdown("---") # Top separator
     

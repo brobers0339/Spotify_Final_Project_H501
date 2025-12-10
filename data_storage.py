@@ -5,6 +5,7 @@ import pandas as pd
 import os
 from instantiation import st
 from dotenv import load_dotenv
+#-------------------------------------------------------------------#
 
 load_dotenv()  #load environment variables from .env file if present
 url = os.getenv("TARGET_URL")
@@ -13,7 +14,7 @@ survey_path = os.getenv("SURVEY_DATA_PATH")
 #-----SPOTIFY-DATASET-HANDLING-----#
 @st.cache_data
 #this function loads the dataset from the given target URL and then caches it for later
-def load_data(url: str) -> pd.DataFrame:
+def load_data() -> pd.DataFrame:
     """Load and cache the Spotify dataset."""
     if not url:
         st.error("ERROR: TARGET_URL is not set in the .env file.")
@@ -26,10 +27,9 @@ def load_data(url: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 
-
 #this function actually retrieves the cached dataset from the previous function
 def get_spotify_dataset() -> pd.DataFrame:
-    return load_data(url)
+    return load_data()
 
 
 

@@ -35,7 +35,8 @@ def display_user_survey(df: pd.DataFrame):
     #UI for actually presenting the form options
     with st.form("user_survey_form"):
         user_name = st.text_input("User Name:", key="user_name")
-        preferred_subgenre = st.selectbox("Preferred Subgenre:", subgenre_options, index=None, key="preferred_subgenre")
+        if selected_genre is not None or selected_genre != "":
+            preferred_subgenre = st.selectbox("Preferred Subgenre:", subgenre_options, index=subgenre_options.index("No Preferred Subgenre"), placeholder='Please select an option', key="preferred_subgenre")
         numeric_candidates = [c for c in cleaned_df.columns if cleaned_df[c].dtype != object and c not in ("release_year", "track_popularity")]
         chosen_vars = st.multiselect("Please choose up to 3 of your most preferred music variables (the first being your most preferred):", options = numeric_candidates, max_selections=3, key="chosen_vars")
         submitted = st.form_submit_button("Submit Survey", key="submit_survey")
@@ -46,6 +47,10 @@ def display_user_survey(df: pd.DataFrame):
     if submitted:
         if not user_name.strip():
             st.warning("WARNING: User name is a required field.")
+        elif len(chosen_vars) == 0:
+            st.warning("WARNING: Please choose at least one music variable.")
+        elif selected_genre is None or selected_genre == "":
+            st.warning("WARNING: Please select a preferred genre.")
         else:
             save_survey_response(user_name, selected_genre, preferred_subgenre, chosen_vars)
             st.success("Thank you! Your survey response has been recorded.")
